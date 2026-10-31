@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>המשחקים שלי</title>
+<style>
+:root{--ac:#ff6a2b;--fg:#e8f0ff;--mut:#9fb2d8}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:radial-gradient(ellipse at 50% 0%,#22345c 0%,#0a1020 55%,#04060d 100%) fixed;color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+body:before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,#ffffff06 0 1px,transparent 1px 4px);pointer-events:none}
+main{max-width:960px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 48px) 20px calc(env(safe-area-inset-bottom,0px) + 48px)}
+h1{margin:0;text-align:center;font:clamp(40px,9vw,72px) Impact,"Arial Narrow",sans-serif;letter-spacing:.05em;background:linear-gradient(180deg,#ffd9a0,#ff6a2b 55%,#b8300a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 20px #ff6a2b77)}
+.sub{text-align:center;color:var(--mut);margin:8px 0 40px;font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+a.card{position:relative;display:flex;flex-direction:column;gap:10px;padding:22px;border-radius:14px;text-decoration:none;color:inherit;background:linear-gradient(180deg,#1b2740,#0f1626);border:2px solid #2c3b5c;transition:transform .15s,border-color .15s,box-shadow .15s}
+a.card:hover,a.card:focus-visible{transform:translateY(-4px);border-color:var(--ac);box-shadow:0 0 24px #ff6a2b55;outline:none}
+.ico{font-size:44px;line-height:1}
+.name{font:28px Impact,"Arial Narrow",sans-serif;letter-spacing:.06em;color:#fff}
+.desc{color:var(--mut);font-size:14px;line-height:1.55;flex:1}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:#ff6a2b22;color:#ffb27a;border:1px solid #ff6a2b55}
+.tag.on{background:#3ddc8422;color:#7dffb0;border-color:#3ddc8455}
+.play{align-self:flex-start;margin-top:4px;padding:8px 18px;border-radius:8px;background:var(--ac);color:#111;font-weight:800;font-size:15px}
+.soon{border-style:dashed;opacity:.55;pointer-events:none}
+footer{text-align:center;color:#5d6f94;font-size:12px;margin-top:48px}
+</style>
+</head>
+<body>
+<main>
+  <h1>המשחקים שלי</h1>
+  <p class="sub">בחר משחק. אפשר לשחק במחשב ובטלפון</p>
+  <div class="grid" id="grid"></div>
+  <footer>Cloudflare Workers</footer>
+</main>
+<script>
+// להוספת משחק: מוסיפים תיקייה בתוך public, ושורה כאן
+const GAMES = [
+  { path: 'last-stand/', icon: '🎯', name: 'LAST STAND', desc: 'באטל רויאל בתלת־ממד: 50 משתתפים, אזור שמתכווץ, בנייה, ארגזי אספקה ונשקי זהב. אפשר לשחק עם חברים בחדר פרטי.', tags: ['אונליין', 'יריות', 'תלת־ממד'], online: true },
+  { soon: true, icon: '➕', name: 'בקרוב', desc: 'המשחק הבא יופיע כאן.', tags: [] },
+];
+const g = document.getElementById('grid');
+for (const x of GAMES) {
+  const a = document.createElement('a');
+  a.className = 'card' + (x.soon ? ' soon' : '');
+  if (!x.soon) a.href = x.path;
+  const tags = x.tags.map((t, i) => `<span class="tag${x.online && i === 0 ? ' on' : ''}"></span>`).join('');
+  a.innerHTML = `<div class="ico"></div><div class="name"></div><div class="desc"></div><div class="tags">${tags}</div>${x.soon ? '' : '<span class="play">שחק ←</span>'}`;
+  a.querySelector('.ico').textContent = x.icon;
+  a.querySelector('.name').textContent = x.name;
+  a.querySelector('.desc').textContent = x.desc;
+  a.querySelectorAll('.tag').forEach((el, i) => el.textContent = x.tags[i]);
+  g.appendChild(a);
+}
+</script>
+</body>
+</html>
